@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid())
+  name       String
+  nickname   String?
+  email      String   @unique
+  password   String
+  celphone   String?
+  admin      Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  sectorId   String
+
+  sector Sector @relation(fields: [sectorId], references: [id])
+
+  ClientUser ClientUser[]
+  @@map("users")
+}
+
+model Sector {
+  id         String   @id @default(uuid())
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  User       User[]
+
+  @@map("sectors")
+}
+
+model Client {
+  id           String   @id @default(uuid())
+  company_name String   @unique
+  client_name  String
+  celphone     String
+  email        String
+  tax          Decimal
+  plan_id      String
+  segment_id   String
+  service_id   String
+  create_at    DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
+
+  segment Segment     @relation(fields: [segment_id], references: [id])
+  plan    ClientPlan  @relation(fields: [plan_id], references: [id])
+  service PlanService @relation(fields: [service_id], references: [id])
+
+  ClientUser ClientUser[]
+  @@map("clients")
+}
+
+model ClientUser {
+  id        String @id @default(uuid())
+  client_id String
+  user_id   String
+
+  client Client @relation(fields: [client_id], references: [id])
+  user   User   @relation(fields: [user_id], references: [id])
+
+  @@map("client_users")
+}
+
+model Segment {
+  id   String @id @default(uuid())
+  name String @unique
+
+  Client Client[]
+  @@map("segments")
+}
+
+model ClientPlan {
+  id           String      @id @default(uuid())
+  name         String      @unique @default("teste")
+  plan_type    String
+  plan_service String
+  planService  PlanService @relation(fields: [plan_service], references: [id])
+  planType     PlanType    @relation(fields: [plan_type], references: [id])
+
+  create_at  DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  Client     Client[]
+  @@map("clients_plans")
+}
+
+model PlanType {
+  id         String       @id @default(uuid())
+  plan       String
+  ClientPlan ClientPlan[]
+
+  @@map("plans_type")
+}
+
+model PlanService {
+  id         String       @id @default(uuid())
+  service    String
+  ClientPlan ClientPlan[]
+
+  Client Client[]
+  @@map("plans_service")
+}
