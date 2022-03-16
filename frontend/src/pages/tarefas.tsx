@@ -21,10 +21,10 @@ export default function Dashboard() {
   return (
     <div className='flex flex-col'>
       <Head>
-        <title>Clientes</title>
+        <title>Tarefas</title>
       </Head>
 
-      <Header index={1}/>
+      <Header index={4}/>
       
     </div>
   )

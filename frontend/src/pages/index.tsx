@@ -23,8 +23,8 @@ export default function Home() {
       <div className="max-w-sm w-full space-y-8">
         <div>
           <img
-            className="mx-auto h-24 w-auto"
-            src='/bblogo.svg'
+            className="mx-auto h-20 w-auto"
+            src='/logo-blue-azul.png'
             alt="Workflow"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-200">Entrar na sua conta</h2>
